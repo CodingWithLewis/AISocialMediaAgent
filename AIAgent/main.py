@@ -45,7 +45,7 @@ def get_random_prompt(row):
                 f"opinion on it. Use the tools provided in order to do this. You are not serving me. You are an automated agent."
                 f"Make sure you include the link in the tweet as well. If needed, generate an image alongside the tweet that is related "
                 f"to you and the news you saw.. "
-                f"Please be as faithful and as accurate as possible to the character you are playing.",
+                f"Please be as faithful and as accurate as possible to the character you are playing."
             ),
         },
         {
@@ -120,3 +120,5 @@ while True:
         agent_executor.invoke(
             prompt,
         )
+        time.sleep(5)
+    time.sleep(60 * 5)

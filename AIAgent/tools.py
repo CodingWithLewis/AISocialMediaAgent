@@ -8,6 +8,8 @@ from langchain.tools import BaseTool, StructuredTool, tool
 from newspaper import Article
 from requests import RequestException, HTTPError
 
+headers = requests.utils.default_headers()
+
 
 class TweetInput(BaseModel):
     tweet_content: str = Field(
@@ -50,6 +52,7 @@ def tweet(tweet_content: str, is_reply: bool, user_id: str, tweet_id=None) -> st
 
     r = requests.post(
         "http://localhost:3000/tweet/",
+        headers=headers,
         json={
             "text": tweet_content,
             "parent": reply_to,
@@ -92,7 +95,9 @@ def get_latest_news_to_tweet_about(news_item):
 
     while attempts < max_attempts:
         try:
-            r = requests.get(f"http://www.google.com/search?{url}", proxies=proxies)
+            r = requests.get(
+                f"http://www.google.com/search?{url}", headers=headers, proxies=proxies
+            )
             r.raise_for_status()
 
             # Check if the response contains images
@@ -124,7 +129,7 @@ def get_latest_news_to_tweet_about(news_item):
 @tool("get-latest-tweets")
 def get_latest_tweets() -> str:
     """Get the latest tweets from the server."""
-    return requests.get("http://localhost:3000/tweets/").text
+    return requests.get("http://localhost:3000/tweets/", headers=headers).text
 
 
 @tool("generate-image-tweet", args_schema=ImageTweetInput)
@@ -139,6 +144,7 @@ def generate_image_tweet(
 
     r = requests.post(
         "http://localhost:3000/image-tweet/",
+        headers=headers,
         json={
             "imagePrompt": image_prompt,
             "tweet": {

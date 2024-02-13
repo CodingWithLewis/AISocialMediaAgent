@@ -6,6 +6,7 @@ import (
 	middleware "AgentAPI/middleware"
 	"AgentAPI/utils"
 	"context"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,7 +17,12 @@ func main() {
 
 	client, storageClient := utils.CreateFirestoreClient(ctx)
 	defer client.Close()
-
+	debug := os.Getenv("DEBUG") == "true"
+	if debug {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.DebugMode)
+	}
 	r := gin.Default()
 	r.Use(middleware.FirestoreClientMiddleware(client, storageClient))
 	// Tweet Routes
@@ -28,5 +34,5 @@ func main() {
 	// User Routes
 	r.POST("/user/", user.CreateUser)
 
-	r.Run()
+	r.Run(":3000")
 }
