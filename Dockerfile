@@ -32,6 +32,6 @@ RUN pip3 install -r requirements.txt
 WORKDIR /
 
 COPY run.sh /run.sh
-
+RUN chmod /run.sh
 # Optional: specify default command
 CMD ["./run.sh"]
